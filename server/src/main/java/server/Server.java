@@ -53,17 +53,25 @@ public class Server {
             c.sendMsg(message);
         }
     }
-    
 
-    public void subscribe(ClientHandler clientHandler) {
-        clients.add(clientHandler);
+    public void privateMsg(ClientHandler sender, String nName, String msg) {
+        String message = String.format("[ %s ] to [ %s ]: %s ", sender.getNickname(), nName, msg);
+        for (ClientHandler c : clients) {
+            if (c.getNickname().equals(nName)) {
+                c.sendMsg(message);
+            }
+        }
     }
 
-    public void unSubscribe(ClientHandler clientHandler) {
-        clients.remove(clientHandler);
-    }
+        public void subscribe (ClientHandler clientHandler){
+            clients.add(clientHandler);
+        }
 
-    public AuthService getAuthService() {
-        return authService;
+        public void unSubscribe (ClientHandler clientHandler){
+            clients.remove(clientHandler);
+        }
+
+        public AuthService getAuthService () {
+            return authService;
+        }
     }
-}
