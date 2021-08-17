@@ -26,6 +26,7 @@ public class ClientHandler {
 
             new Thread(() -> {
                 try {
+                    socket.setSoTimeout(120000);
                     //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
@@ -69,6 +70,7 @@ public class ClientHandler {
                     }
                     //цикл работы
                     while (authenticated) {
+                        socket.setSoTimeout(0);
                         String str = in.readUTF();
 
                         if (str.startsWith("/")) {
@@ -89,7 +91,10 @@ public class ClientHandler {
                         }
                     }
 
-                } catch (IOException e) {
+                } catch (SocketTimeoutException esoc) {
+                    sendMsg("/end");
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 } finally {
                     server.unSubscribe(this);
