@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Server {
     private ServerSocket server;
     private Socket socket;
-    private final int PORT = 8189;
+    private final int PORT = 8202;
 
 
     private List<ClientHandler> clients;
@@ -20,15 +20,17 @@ public class Server {
     public Server() {
 
         clients = new CopyOnWriteArrayList();
-        authService = new SimpleAuthService();
+//        authService = new SimpleAuthService();
+        if (!SQLHandler.connect()) {
+            throw new RuntimeException("Не удалось подключиться к БД!");
+        }
+        authService = new DBAuthService();
 
         try {
             server = new ServerSocket(PORT);
             System.out.println("Server start!");
 
-
             while (true) {
-
                 socket = server.accept();
                 System.out.println("Client connected");
                 new ClientHandler(socket, this);
@@ -37,7 +39,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-
+            SQLHandler.disconnect();
 
             try {
                 server.close();
