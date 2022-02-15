@@ -54,6 +54,8 @@ public class Controller implements Initializable {
     private Stage regStage;
     private RegController regController;
 
+    private String login;
+
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -66,6 +68,7 @@ public class Controller implements Initializable {
 
         if (!authenticated) {
             nickname = "";
+            History.stop();
         }
         setTitle(nickname);
         textArea.clear();
@@ -112,6 +115,8 @@ public class Controller implements Initializable {
                             if (str.startsWith("/authok")) {
                                 nickname = str.split("\\s")[1];
                                 setAuthenticated(true);
+                                textArea.appendText(History.getLastLines(login));
+                                History.start(login);
                                 break;
                             }
                             if (str.equals("/regok")) {
@@ -144,6 +149,7 @@ public class Controller implements Initializable {
                             }
                         } else {
                             textArea.appendText(str + "\n");
+                            History.writeLine(str);
                         }
 
 
@@ -185,7 +191,8 @@ public class Controller implements Initializable {
             connect();
         }
 
-        String login = loginField.getText().trim();
+        login = loginField.getText().trim();
+        //String login = loginField.getText().trim();
         String password = passField.getText().trim();
         String msg = String.format("/auth %s %s", login, password);
 
