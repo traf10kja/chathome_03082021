@@ -48,6 +48,8 @@ public class Controller implements Initializable {
     private DataInputStream in;
     private DataOutputStream out;
 
+    private History history = new History();
+
     private boolean authenticated;
     private String nickname;
     private Stage stage;
@@ -68,7 +70,7 @@ public class Controller implements Initializable {
 
         if (!authenticated) {
             nickname = "";
-            History.stop();
+            history.stop();
         }
         setTitle(nickname);
         textArea.clear();
@@ -115,8 +117,8 @@ public class Controller implements Initializable {
                             if (str.startsWith("/authok")) {
                                 nickname = str.split("\\s")[1];
                                 setAuthenticated(true);
-                                textArea.appendText(History.getLastLines(login));
-                                History.start(login);
+                                textArea.appendText(history.getLastLines(login));
+                                history.start(login);
                                 break;
                             }
                             if (str.equals("/regok")) {
@@ -149,7 +151,7 @@ public class Controller implements Initializable {
                             }
                         } else {
                             textArea.appendText(str + "\n");
-                            History.writeLine(str);
+                            history.writeLine(str);
                         }
 
 

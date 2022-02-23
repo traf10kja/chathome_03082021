@@ -10,13 +10,13 @@ import java.util.List;
 
 public class History {
 
-    private static PrintWriter out;
+    private PrintWriter out;
 
-    private static String getHistoryByLogin(String login) {
+    private String getHistoryByLogin(String login) {
         return "history/history_" + login + ".txt";
     }
 
-    public static void start(String login) {
+    public void start(String login) {
         try {
             out = new PrintWriter(new FileOutputStream(getHistoryByLogin(login), true), true);
         } catch (FileNotFoundException e) {
@@ -24,17 +24,17 @@ public class History {
         }
     }
 
-    public static void stop() {
+    public void stop() {
         if (out != null) {
             out.close();
         }
     }
 
-    public static void writeLine(String msg) {
+    public void writeLine(String msg) {
         out.println(msg);
     }
 
-    public static String getLastLines(String login) {
+    public String getLastLines(String login) {
         if (!Files.exists(Paths.get(getHistoryByLogin(login)))) {
             return "";
         }
