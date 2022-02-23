@@ -6,12 +6,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private ServerSocket server;
     private Socket socket;
     private final int PORT = 8202;
 
+    private ExecutorService service = Executors.newFixedThreadPool(10);
 
     private List<ClientHandler> clients;
     private AuthService authService;
@@ -33,7 +36,7 @@ public class Server {
             while (true) {
                 socket = server.accept();
                 System.out.println("Client connected");
-                new ClientHandler(socket, this);
+                new ClientHandler(socket, this,service);
             }
 
         } catch (IOException e) {

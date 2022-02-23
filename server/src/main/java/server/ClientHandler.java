@@ -5,10 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.ExecutorService;
 
 public class ClientHandler {
     Server server;
     Socket socket;
+    ExecutorService service;
     DataInputStream in;
     DataOutputStream out;
 
@@ -16,15 +18,17 @@ public class ClientHandler {
     private String nickname;
     private String login;
 
-    public ClientHandler(Socket socket, Server server) {
+    public ClientHandler(Socket socket, Server server, ExecutorService service) {
         try {
             this.socket = socket;
             this.server = server;
+            this.service = service;
 
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-            new Thread(() -> {
+//            new Thread(() -> {
+            service.execute(() -> {
                 try {
                     socket.setSoTimeout(120000);
                     //цикл аутентификации
@@ -104,7 +108,7 @@ public class ClientHandler {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
