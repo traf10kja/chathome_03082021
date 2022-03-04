@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    public static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
     Server server;
     Socket socket;
     ExecutorService service;
@@ -37,7 +39,7 @@ public class ClientHandler {
 
                         if (str.equals("/end")) {
                             sendMsg("/end");
-                            System.out.println("Client disconnected");
+                            logger.info("Client disconnected");
                             break;
                         }
                         if (str.startsWith("/auth ")) {
@@ -80,7 +82,7 @@ public class ClientHandler {
                         if (str.startsWith("/")) {
                             if (str.equals("/end")) {
                                 sendMsg("/end");
-                                System.out.println("Client disconnected");
+                                logger.info("Client disconnected");
                                 break;
                             }
                             if (str.startsWith("/w")) {

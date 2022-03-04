@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
+    public static final Logger logger = Logger.getLogger(Server.class.getName());
     private ServerSocket server;
     private Socket socket;
     private final int PORT = 8202;
@@ -31,11 +34,11 @@ public class Server {
 
         try {
             server = new ServerSocket(PORT);
-            System.out.println("Server start!");
+            logger.info("Server start!");
 
             while (true) {
                 socket = server.accept();
-                System.out.println("Client connected");
+                logger.info("Client connected");
                 new ClientHandler(socket, this,service);
             }
 
@@ -48,6 +51,7 @@ public class Server {
                 server.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.log(Level.SEVERE,"Close ",e);
             }
         }
     }
